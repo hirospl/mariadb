@@ -1,0 +1,38 @@
+#!/usr/bin/expect -f
+
+set timeout -1
+set UNIX_SOCKET_AUTH [lindex $argv 0]
+set MARIADB_ROOT_PASSWORD [lindex $argv 1]
+set PASSSET [lindex $argv 2]
+
+# Secure Installation
+spawn mysql_secure_installation
+
+expect "Enter current password for root (enter for none): "
+send "\n"
+
+expect "Switch to unix_socket authentication"
+send "$UNIX_SOCKET_AUTH\n"
+
+expect "Change the root password?" 
+send "$PASSSET\n"
+
+if { $PASSSET == "y" || $PASSSET == "Y" } {
+    expect "New password:"
+    send "$MARIADB_ROOT_PASSWORD\r"
+    expect "Re-enter new password:"
+    send "$MARIADB_ROOT_PASSWORD\r"
+}
+
+expect "Remove anonymous users?"
+send "Y\n"
+expect "Disallow root login remotely?"
+send "Y\n"
+expect "Remove test database and access to it?"
+send "Y\n"
+expect "Reload privilege tables now?"
+send "Y\n"
+
+expect eof
+
+exit 0
