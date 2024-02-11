@@ -4,7 +4,7 @@ COPY ./init.sh init.sh
 
 RUN groupadd -r mysql \
 &&  useradd -r -g mysql mysql --home-dir /var/lib/mysql \
-&&  apt-get update \
+&&  apt-get update && apt-get -y upgrade \
 &&  DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server \
     expect \
 &&  /etc/init.d/mariadb stop \
